@@ -6,7 +6,7 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Formatter\LineFormatter;
 
-trait MonologAbleTrait
+trait MonologAble
 {
     /**
      * Logger instance.
