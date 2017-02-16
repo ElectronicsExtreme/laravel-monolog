@@ -93,7 +93,7 @@ trait MonologAble
     private function getLoggerStoragePath($level)
     {
         $sectors = array_merge(['logs'], array_map('snake_case', explode('\\', $this)));
-        $path = sprintf('%s-%s.log', implode(DIRECTORY_SEPARATOR, $sectors), $level);
+        $path = sprintf('%s_%s.log', implode(DIRECTORY_SEPARATOR, $sectors), $level);
 
         return storage_path($path);
     }
