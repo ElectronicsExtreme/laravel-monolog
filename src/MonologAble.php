@@ -49,7 +49,7 @@ trait MonologAble
      */
     private function getLoggerName()
     {
-        return snake_case(class_basename(self::class));
+        return snake_case(class_basename($this));
     }
 
     /**
@@ -92,7 +92,7 @@ trait MonologAble
      */
     private function getLoggerStoragePath($level)
     {
-        $sectors = array_merge(['logs'], array_map('snake_case', explode('\\', self::class)));
+        $sectors = array_merge(['logs'], array_map('snake_case', explode('\\', $this)));
         $path = sprintf('%s-%s.log', implode(DIRECTORY_SEPARATOR, $sectors), $level);
 
         return storage_path($path);
