@@ -11,9 +11,9 @@ trait MonologAble
     /**
      * Logger instance.
      *
-     * @var Logger
+     * @var array
      */
-    private $logger;
+    private $logger = [];
 
     /**
      * Adds a log record at SPECIFIED level.
@@ -25,21 +25,23 @@ trait MonologAble
      */
     private function saveLog($level, array $context)
     {
-        if (! $this->logger instanceof Logger) {
-            $this->logger = $this->createLogger();
+        if (! isset($this->logger[$level])) {
+            $this->logger[$level] = $this->createLogger($level);
         }
 
-        return $this->logger->$level($level, $this->addLoggerTrack($context));
+        return $this->logger[$level]->$level($level, $this->addLoggerTrack($context));
     }
 
     /**
      * Create a new logger with handlers.
      *
+     * @param  string $level
+     *
      * @return Logger
      */
-    private function createLogger()
+    private function createLogger($level)
     {
-        return new Logger($this->getLoggerName(), $this->createLoggerHandlers());
+        return new Logger($this->getLoggerName(), [$this->createLoggerHandler($level)]);
     }
 
     /**
@@ -53,24 +55,41 @@ trait MonologAble
     }
 
     /**
-     * Create new handlers with separate file location.
+     * Create new handler with separate file location.
      *
-     * @return array
+     * @param  string $level
+     *
+     * @return StreamHandler
      */
-    private function createLoggerHandlers()
+    private function createLoggerHandler($level)
     {
         $formatter = $this->getLoggerFormatter();
 
-        return [
-            (new StreamHandler($this->getLoggerStoragePath('debug'), Logger::DEBUG))->setFormatter($formatter),
-            (new StreamHandler($this->getLoggerStoragePath('info'), Logger::INFO))->setFormatter($formatter),
-            (new StreamHandler($this->getLoggerStoragePath('notice'), Logger::NOTICE))->setFormatter($formatter),
-            (new StreamHandler($this->getLoggerStoragePath('warning'), Logger::WARNING))->setFormatter($formatter),
-            (new StreamHandler($this->getLoggerStoragePath('error'), Logger::ERROR))->setFormatter($formatter),
-            (new StreamHandler($this->getLoggerStoragePath('critical'), Logger::CRITICAL))->setFormatter($formatter),
-            (new StreamHandler($this->getLoggerStoragePath('alert'), Logger::ALERT))->setFormatter($formatter),
-            (new StreamHandler($this->getLoggerStoragePath('emergency'), Logger::EMERGENCY))->setFormatter($formatter),
-        ];
+        switch ($level) {
+            case 'debug':
+                return (new StreamHandler($this->getLoggerStoragePath('debug'), Logger::DEBUG))->setFormatter($formatter);
+
+            case 'info':
+                return (new StreamHandler($this->getLoggerStoragePath('info'), Logger::INFO))->setFormatter($formatter);
+
+            case 'notice':
+                return (new StreamHandler($this->getLoggerStoragePath('notice'), Logger::NOTICE))->setFormatter($formatter);
+
+            case 'warning':
+                return (new StreamHandler($this->getLoggerStoragePath('warning'), Logger::WARNING))->setFormatter($formatter);
+
+            case 'error':
+                return (new StreamHandler($this->getLoggerStoragePath('error'), Logger::ERROR))->setFormatter($formatter);
+
+            case 'critical':
+                return (new StreamHandler($this->getLoggerStoragePath('critical'), Logger::CRITICAL))->setFormatter($formatter);
+
+            case 'alert':
+                return (new StreamHandler($this->getLoggerStoragePath('alert'), Logger::ALERT))->setFormatter($formatter);
+
+            case 'emergency':
+                return (new StreamHandler($this->getLoggerStoragePath('emergency'), Logger::EMERGENCY))->setFormatter($formatter);
+        }
     }
 
     /**
