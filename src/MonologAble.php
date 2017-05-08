@@ -29,7 +29,7 @@ trait MonologAble
             $this->logger = $this->createLogger();
         }
 
-        return $this->logger->$level($level, $this->addLoggerTrack($context));
+        return $this->logger->$level($this->getLoggerNamespace(), $this->addLoggerTrack($context));
     }
 
     /**
@@ -40,6 +40,16 @@ trait MonologAble
     private function createLogger()
     {
         return new Logger($this->getLoggerName(), $this->createLoggerHandlers());
+    }
+
+    /**
+     * Generate logger namespace from self class name.
+     *
+     * @return string
+     */
+    private function getLoggerNamespace()
+    {
+        return snake_case(str_replace('\\', '', get_class($this)));
     }
 
     /**
