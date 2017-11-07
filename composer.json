@@ -14,5 +14,12 @@
         "psr-4": {
             "ElectronicsExtreme\\LaravelMonolog\\": "src/"
         }
+    },
+    "extra": {
+        "laravel-monolog": {
+            "providers": [
+                "ElectronicsExtreme\\LaravelMonolog\\MonologServiceProvider"
+            ]
+        }
     }
 }
