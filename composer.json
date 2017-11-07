@@ -16,7 +16,7 @@
         }
     },
     "extra": {
-        "laravel-monolog": {
+        "laravel": {
             "providers": [
                 "ElectronicsExtreme\\LaravelMonolog\\MonologServiceProvider"
             ]
